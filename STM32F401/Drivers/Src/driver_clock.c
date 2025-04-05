@@ -5,7 +5,7 @@ static uint32_t clock_value;
 clock_status_e clock_init(void)
 {
     clock_value = CLOCK_INTERNAL_RC_VALUE;
-    return CLOCK_NOT_OK;
+    return CLOCK_OK;
 
 }
 

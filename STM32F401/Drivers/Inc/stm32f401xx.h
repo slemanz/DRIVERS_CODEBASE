@@ -425,8 +425,8 @@ typedef struct
 
 
 
-#define SCB_BASE (0xE000ED00UL)
-#define VTOR_OFFSET       MMIO32(SCB_BASE + 0x08U)
+#define SCB_BASE            (0xE000ED00UL)
+#define VTOR_OFFSET         MMIO32(SCB_BASE + 0x08U)
 
 
 /*
