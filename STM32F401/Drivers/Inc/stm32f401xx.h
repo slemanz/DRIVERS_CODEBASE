@@ -433,6 +433,7 @@ typedef struct
  * Drivers includes
  */
 
+#include "driver_clock.h"
 #include "driver_systick.h"
 #include "driver_interrupt.h"
 #include "driver_gpio.h"

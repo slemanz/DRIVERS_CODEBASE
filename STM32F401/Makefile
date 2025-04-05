@@ -24,11 +24,14 @@ OBJS		+= App/Build/main.o
 OBJS		+= App/Build/syscalls.o
 OBJS		+= App/Build/startup.o
 
+OBJS		+= App/Build/driver_clock.o
 OBJS		+= App/Build/driver_systick.o
 OBJS		+= App/Build/driver_interrupt.o
 OBJS		+= App/Build/driver_gpio.o
 OBJS		+= App/Build/driver_uart.o
 OBJS		+= App/Build/system.o
+
+OBJS		+= App/Build/config.o
 
 
 all: App/Build/$(TARGET).elf
