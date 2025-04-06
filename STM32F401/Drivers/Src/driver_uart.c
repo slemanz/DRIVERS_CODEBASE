@@ -27,6 +27,7 @@ void uart2_init(void)
 
 void uart2_init_pins(void)
 {
+    /*
     GPIO_Handle_t UartPin;
 
     UartPin.pGPIOx = GPIOA;
@@ -42,6 +43,7 @@ void uart2_init_pins(void)
     UartPin.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_3;
     UartPin.GPIO_PinConfig.GPIO_PinAltFunMode = PA3_ALTFN_UART2_RX;
     GPIO_Init(&UartPin);
+    */
 }
 
 void uart2_interrupt_enable(void)

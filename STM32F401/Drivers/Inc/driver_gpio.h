@@ -9,13 +9,14 @@
 
 typedef struct
 {
+	GPIO_RegDef_t *pGPIOx;      /* hold the base address of the GPIO port which the pin belongs */
 	uint8_t GPIO_PinNumber; 	/*!< possible modes from @GPIO_PIN_NUMBER >*/
 	uint8_t GPIO_PinMode;		/*!< possible modes from @GPIO_PIN_MODES >*/
 	uint8_t	GPIO_PinSpeed; 		/*!< possible modes from @GPIO_PIN_SPEED >*/
 	uint8_t GPIO_PinPuPdControl;/*!< possible modes from @GPIO_PIN_PUPD >*/
 	uint8_t GPIO_PinOPType;		/*!< possible modes from @GPIO_PIN_OP_TYPE >*/
 	uint8_t GPIO_PinAltFunMode;	/*!< possible modes from @GPIO_PIN_ >*/
-}GPIO_PinConfig_t;
+}GPIO_Config_t;
 
 
 /*
@@ -25,7 +26,7 @@ typedef struct
 typedef struct
 {
 	GPIO_RegDef_t *pGPIOx; /* hold the base address of the GPIO port which the pin belongs */
-	GPIO_PinConfig_t GPIO_PinConfig; /* this holds GPIO pin configuration settings */
+	GPIO_Config_t GPIO_Config; /* this holds GPIO pin configuration settings */
 }GPIO_Handle_t;
 
 /*
@@ -131,7 +132,7 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi);
 /*
  * Init and De-init
  */
-void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
+void GPIO_Init(GPIO_Config_t *pGPIOConfig);
 void GPIO_DeInit(GPIO_RegDef_t *pGPIOx);
 
 
