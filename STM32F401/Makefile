@@ -34,7 +34,10 @@ OBJS		+= App/Build/driver_uart.o
 OBJS		+= App/Build/config.o
 
 
-all: App/Build/$(TARGET).elf
+all: App/Build App/Build/$(TARGET).elf 
+
+App/Build:
+	mkdir App/Build
 
 App/Build/%.o: App/Src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o App/Build/$(*).o App/Src/$(*).c
