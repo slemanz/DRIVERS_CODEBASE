@@ -87,3 +87,45 @@ void USART2_IRQHandler(void)
         }
 	}
 }
+
+// NEW API
+
+void UART_PeriClockControl(UART_RegDef_t *pUSARTx, uint8_t EnorDi)
+{
+
+}
+
+
+/*
+ * Init and De-init
+ */
+void UART_Init(UART_Config_t *pUARTConfig);
+void UART_DeInit(UART_RegDef_t *pUSARTx);
+
+
+/*
+ * Data Send and Receive
+ */
+void UART_write_byte(UART_RegDef_t *pUARTx, uint8_t data);
+uint8_t UART_read_byte(UART_RegDef_t *pUARTx);
+
+void UART_Write(UART_RegDef_t *pUARTx, uint8_t *pTxBuffer, uint32_t Len);
+void UART_Read(UART_RegDef_t *pUARTx, uint8_t *pRxBuffer, uint32_t Len);
+
+
+/*
+ * IRQ Configuration and ISR handling
+ */
+
+void UART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
+void UART_CallbackRegister(UART_RegDef_t *pUARTx, uart_callback_t rx_callback, uart_callback_t tx_callback);
+void uart2_CallbackRegister(uart_callback_t callback);
+
+
+/*
+ * Other Peripheral Control APIs
+ */
+void UART_PeripheralControl(UART_RegDef_t *pUARTx, uint8_t EnorDi);
+uint8_t UART_GetFlagStatus(UART_RegDef_t *pUARTx , uint8_t FlagName);
+void UART_ClearFlag(UART_RegDef_t *pUARTx, uint16_t StatusFlagName);
+void UART_SetBaudRate(UART_RegDef_t *pUARTx, uint32_t BaudRate);

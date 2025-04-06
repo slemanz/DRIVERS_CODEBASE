@@ -1,5 +1,6 @@
 #include "config.h"
 #include "common-defines.h" 
+#include <stdio.h>
 
 #include "driver_gpio.h"
 
@@ -14,8 +15,10 @@ uint64_t ticks_get()
 int main(void)
 {
     config_drivers();
+    printf("\n\rInit\n\r");
 
     uint64_t start_time = ticks_get();
+
 
     GPIO_WriteToOutputPin(GPIOB, GPIO_PIN_NO_2, GPIO_PIN_RESET);
     GPIO_WriteToOutputPin(GPIOA, GPIO_PIN_NO_5, GPIO_PIN_SET);
@@ -28,6 +31,8 @@ int main(void)
             GPIO_ToggleOutputPin(GPIOB, GPIO_PIN_NO_2);
             start_time = ticks_get();
         }
+
+    
 
     }
 }
