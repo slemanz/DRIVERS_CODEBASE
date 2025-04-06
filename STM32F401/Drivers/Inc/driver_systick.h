@@ -3,9 +3,14 @@
 
 #include "stm32f401xx.h"
 
-#define TICK_HZ                 1000U
-#define SYSTICK_TIM_CLK			HSI_CLOCK
+#define CTRL_ENABLE                 (1U << 0)
+#define CTRL_CLKSRC                 (1U << 2)
+#define CTRL_COUNTFLAG              (1U << 16)
+#define CTRL_TICKINT                (1U << 1)
 
-void systick_init(uint32_t tick_hz);
+void systick_init(uint32_t freq, uint32_t cpu_freq);
+void systick_set_frequency(uint32_t freq, uint32_t cpu_freq);
+void systick_counter_enable(void);
+void systick_interrupt_enable(void);
 
 #endif

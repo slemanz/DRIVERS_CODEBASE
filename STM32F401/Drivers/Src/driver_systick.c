@@ -1,19 +1,29 @@
 #include "driver_systick.h"
 
-
-void systick_init(uint32_t tick_hz)
+void systick_init(uint32_t freq, uint32_t cpu_freq)
 {
-    uint32_t count_value = SYSTICK_TIM_CLK/tick_hz;
+    systick_set_frequency(freq, cpu_freq);
+    systick_counter_enable();
+    systick_interrupt_enable();
+}
 
-    // clear the value of SVR (value reload)
-    SYSTICK->LOAD &= ~(0x00FFFFFFFF);
-    
-    // load the value
-    SYSTICK->LOAD |= count_value;
+void systick_set_frequency(uint32_t freq, uint32_t cpu_freq)
+{
+    // reload with number of clocks persecond
+    SYSTICK->LOAD   = (cpu_freq/freq) - 1;
 
-    // setting and enable
-    SYSTICK->CTRL |= (1 << 1);
-    SYSTICK->CTRL |= (1 << 2);
+    // clear systick current value register
+    SYSTICK->VAL = 0;
+}
 
-    SYSTICK->CTRL |= (1 << 0);
+void systick_counter_enable(void)
+{
+    // Enable systick and select internal clk src
+    SYSTICK->CTRL = CTRL_ENABLE | CTRL_CLKSRC;
+}
+
+void systick_interrupt_enable(void)
+{
+    // enable systick interrupt
+    SYSTICK->CTRL |= CTRL_TICKINT;
 }
