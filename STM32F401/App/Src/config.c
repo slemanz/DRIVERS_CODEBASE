@@ -9,11 +9,24 @@ static const GPIO_Config_t gpioConfigs[] = {
     // Add more configurations as needed
 };
 
+static const UART_Config_t UartConfigs[] = {
+    {UART2,     UART_MODE_ONLY_TX,      USART_STD_BAUD_115200,  USART_STOPBITS_1,    UART_PARITY_DISABLE}
+    // Add more configurations as needed
+};
+
 static void config_gpio(void)
 {
     for (uint32_t i = 0; i < sizeof(gpioConfigs) / sizeof(gpioConfigs[0]); i++)
     {
         GPIO_Init((GPIO_Config_t *)&gpioConfigs[i]);
+    }
+}
+
+static void config_uart(void)
+{
+    for (uint32_t i = 0; i < sizeof(UartConfigs) / sizeof(UartConfigs[0]); i++)
+    {
+        UART_Init((UART_Config_t *)&UartConfigs[0]);
     }
 }
 
@@ -23,8 +36,8 @@ void config_drivers(void)
     while(clock_init());
 
     config_gpio();
+    config_uart();
     systick_init(1000, clock_getValue());
-    uart2_init();
 }
 
 
