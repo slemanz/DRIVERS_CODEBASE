@@ -246,7 +246,9 @@ typedef struct
 #define TIM4			((TIM_RegDef_t*)TIM4_BASEADDR)
 #define TIM5			((TIM_RegDef_t*)TIM5_BASEADDR)
 
+#define UART1 			((UART_RegDef_t*)USART1_BASEADDR)
 #define UART2 			((UART_RegDef_t*)UART2_BASEADDR)
+#define UART6 			((UART_RegDef_t*)USART6_BASEADDR)
 
 
 /*

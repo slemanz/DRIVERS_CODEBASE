@@ -23,9 +23,9 @@ typedef struct
  *@USART_Mode
  *Possible options for USART_Mode
  */
-#define USART_MODE_ONLY_TX		0
-#define USART_MODE_ONLY_RX		1
-#define USART_MODE_TXRX			2
+#define UART_MODE_ONLY_TX		0
+#define UART_MODE_ONLY_RX		1
+#define UART_MODE_TXRX			2
 
 
 /*
@@ -41,9 +41,9 @@ typedef struct
  *@USART_ParityControl
  *Possible options for USART_ParityControl
  */
-#define USART_PARITY_EN_ODD			2
-#define USART_PARITY_EN_EVEN		1
-#define USART_PARITY_DISABLE		0
+#define UART_PARITY_EN_ODD          2
+#define UART_PARITY_EN_EVEN         1
+#define UART_PARITY_DISABLE         0
 
 
 /*
@@ -62,6 +62,7 @@ typedef struct
 #define UART_CR1_UE                 13
 #define UART_CR1_M                  12
 #define UART_CR1_PCE                10
+#define UART_CR1_PS                 9
 #define UART_CR1_RXNEIE             5
 #define UART_CR1_TE                 3
 #define UART_CR1_RE                 2
@@ -80,6 +81,7 @@ typedef struct
 #define UART_CR1_UE_MASK             (1 << UART_CR1_UE)
 #define UART_CR1_M_MASK              (1 << UART_CR1_M)
 #define UART_CR1_PCE_MASK            (1 << UART_CR1_PCE)
+#define UART_CR1_PS_MASK             (1 << UART_CR1_PS)
 #define UART_CR1_RXNEIE_MASK         (1 << UART_CR1_RXNEIE)
 #define UART_CR1_TE_MASK             (1 << UART_CR1_TE)
 #define UART_CR1_RE_MASK             (1 << UART_CR1_RE)
@@ -111,12 +113,13 @@ typedef struct
 /*
  * Peripheral Clock setup
  */
-void UART_PeriClockControl(UART_RegDef_t *pUSARTx, uint8_t EnorDi);
+void UART_PeriClockControl(UART_RegDef_t *pUARTx, uint8_t EnorDi);
 
 
 /*
  * Init and De-init
  */
+
 void UART_Init(UART_Config_t *pUARTConfig);
 void UART_DeInit(UART_RegDef_t *pUSARTx);
 
@@ -124,6 +127,7 @@ void UART_DeInit(UART_RegDef_t *pUSARTx);
 /*
  * Data Send and Receive
  */
+
 void UART_write_byte(UART_RegDef_t *pUARTx, uint8_t data);
 uint8_t UART_read_byte(UART_RegDef_t *pUARTx);
 
@@ -146,12 +150,10 @@ void uart2_CallbackRegister(uart_callback_t callback);
 void UART_PeripheralControl(UART_RegDef_t *pUARTx, uint8_t EnorDi);
 uint8_t UART_GetFlagStatus(UART_RegDef_t *pUARTx , uint8_t FlagName);
 void UART_ClearFlag(UART_RegDef_t *pUARTx, uint16_t StatusFlagName);
-void UART_SetBaudRate(UART_RegDef_t *pUARTx, uint32_t BaudRate);
 
 
 // REFACT
 void uart2_init(void);
-void uart2_init_pins(void);
 void uart2_interrupt_enable(void);
 
 int uart2_write(int ch);

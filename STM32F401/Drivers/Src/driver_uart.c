@@ -13,7 +13,6 @@ static uint16_t compute_uart_div(uint32_t PeriphClk, uint32_t BaudRate)
 
 void uart2_init(void)
 {
-    uart2_init_pins();
     UART2_PCLK_EN();
 
     // no flow control (default reset)
@@ -24,27 +23,6 @@ void uart2_init(void)
     UART2->CR1 |= (1 << 13);// enable uart periph
 }
 
-
-void uart2_init_pins(void)
-{
-    /*
-    GPIO_Handle_t UartPin;
-
-    UartPin.pGPIOx = GPIOA;
-    UartPin.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
-    UartPin.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_2;
-    UartPin.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
-    UartPin.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
-    UartPin.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
-    UartPin.GPIO_PinConfig.GPIO_PinAltFunMode = PA2_ALTFN_UART2_TX;
-
-    GPIO_Init(&UartPin);
-
-    UartPin.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_3;
-    UartPin.GPIO_PinConfig.GPIO_PinAltFunMode = PA3_ALTFN_UART2_RX;
-    GPIO_Init(&UartPin);
-    */
-}
 
 void uart2_interrupt_enable(void)
 {
@@ -90,16 +68,86 @@ void USART2_IRQHandler(void)
 
 // NEW API
 
-void UART_PeriClockControl(UART_RegDef_t *pUSARTx, uint8_t EnorDi)
+void UART_PeriClockControl(UART_RegDef_t *pUARTx, uint8_t EnorDi)
 {
-
+    if(EnorDi == ENABLE)
+    {
+        if(pUARTx == UART1)
+        {
+            UART1_PCLK_EN();
+        }else if(pUARTx == UART2)
+        {
+            UART2_PCLK_EN();
+        }else if(pUARTx == UART6)
+        {
+            UART6_PCLK_EN();
+        }
+    }else
+    {
+        if(pUARTx == UART1)
+        {
+            UART1_PCLK_DI();
+        }else if(pUARTx == UART2)
+        {
+            UART2_PCLK_DI();
+        }else if(pUARTx == UART6)
+        {
+            UART6_PCLK_DI();
+        }
+    }
 }
 
 
 /*
  * Init and De-init
  */
-void UART_Init(UART_Config_t *pUARTConfig);
+
+void UART_Init(UART_Config_t *pUARTConfig)
+{
+    // temporary variable
+	uint32_t tempreg = 0;
+
+	UART_PeriClockControl(pUARTConfig->pUSARTx, ENABLE);
+
+	// Enable USART Tx and Rx engines
+	if(pUARTConfig->USART_Mode == UART_MODE_ONLY_RX)
+	{
+		tempreg |= UART_CR1_RE_MASK;
+	}else if(pUARTConfig->USART_Mode == UART_MODE_ONLY_TX)
+	{
+		tempreg |= UART_CR1_TE_MASK;
+	}else if(pUARTConfig->USART_Mode == UART_MODE_TXRX)
+	{
+		tempreg |= (UART_CR1_RE_MASK | UART_CR1_TE_MASK);
+	}
+
+	if(pUARTConfig->USART_ParityControl == UART_PARITY_EN_EVEN)
+	{
+		tempreg |= UART_CR1_PCE_MASK;
+	}else if(pUARTConfig->USART_ParityControl == UART_PARITY_EN_ODD)
+	{
+		tempreg |= UART_CR1_PCE;
+		tempreg |= UART_CR1_PS;
+	}
+
+	// program the CR1 register
+	pUARTConfig->pUSARTx->CR1 = tempreg;
+
+
+
+	// *** Configuration of CR2 **************************************
+	tempreg = 0;
+
+	tempreg |= (pUARTConfig->USART_NoOfStopBits << UART_CR2_STOP);
+
+	// program the CR2 register
+	pUARTConfig->pUSARTx->CR2 = tempreg;
+
+    // Config Baudrate
+    pUARTConfig->pUSARTx->BRR = compute_uart_div(clock_getValue(), pUARTConfig->USART_Baud);
+
+    UART_PeripheralControl(pUARTConfig->pUSARTx, ENABLE);
+}
 void UART_DeInit(UART_RegDef_t *pUSARTx);
 
 
@@ -125,7 +173,16 @@ void uart2_CallbackRegister(uart_callback_t callback);
 /*
  * Other Peripheral Control APIs
  */
-void UART_PeripheralControl(UART_RegDef_t *pUARTx, uint8_t EnorDi);
+void UART_PeripheralControl(UART_RegDef_t *pUARTx, uint8_t EnorDi)
+{
+    if(EnorDi == ENABLE)
+    {
+        pUARTx->CR1 |=  UART_CR1_UE_MASK;
+    }else
+    {
+        pUARTx->CR1 &= ~UART_CR1_UE_MASK;
+    }
+}
+
 uint8_t UART_GetFlagStatus(UART_RegDef_t *pUARTx , uint8_t FlagName);
 void UART_ClearFlag(UART_RegDef_t *pUARTx, uint16_t StatusFlagName);
-void UART_SetBaudRate(UART_RegDef_t *pUARTx, uint32_t BaudRate);
