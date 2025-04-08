@@ -45,5 +45,7 @@ void config_drivers(void)
 // printf retarget
 extern int __io_putchar(int ch)
 {
-    return uart2_write(ch);
+    uint8_t ch_send = (uint8_t)ch;
+    UART_Write(UART2, &ch_send, 1);
+    return ch;
 }

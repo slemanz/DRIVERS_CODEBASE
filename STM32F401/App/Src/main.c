@@ -18,6 +18,7 @@ int main(void)
     printf("\n\rInit\n\r");
 
     uint64_t start_time = ticks_get();
+    uint64_t start_time2 = ticks_get();
 
 
     GPIO_WriteToOutputPin(GPIOB, GPIO_PIN_NO_2, GPIO_PIN_RESET);
@@ -32,8 +33,11 @@ int main(void)
             start_time = ticks_get();
         }
 
-    
-
+        if((ticks_get() - start_time2) >= 60000)
+        {
+            printf("Testing\n\r");
+            start_time2 = ticks_get();
+        }
     }
 }
 

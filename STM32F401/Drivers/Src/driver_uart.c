@@ -1,26 +1,14 @@
 #include "driver_uart.h"
 
-// Global variable to store the callback
+// Global variables to store the callbacks
 static uart_callback_t uart2_rx_callback = NULL;
+static uart_callback_t uart2_tx_callback = NULL;
 
 static uint16_t compute_uart_div(uint32_t PeriphClk, uint32_t BaudRate);
 
 static uint16_t compute_uart_div(uint32_t PeriphClk, uint32_t BaudRate)
 {
     return ((PeriphClk + (BaudRate/2U))/BaudRate);
-}
-
-
-void uart2_init(void)
-{
-    UART2_PCLK_EN();
-
-    // no flow control (default reset)
-    uint32_t temp = ((1 << 3) | (1 << 2)); // tx and rx enable
-    UART2->CR1 = temp; 
-    UART2->BRR = compute_uart_div(16000000, 115200); // baurate
-
-    UART2->CR1 |= (1 << 13);// enable uart periph
 }
 
 
@@ -31,19 +19,6 @@ void uart2_interrupt_enable(void)
     UART2->CR1 |=  (1 << 0);
 }
 
-
-int uart2_write(int ch)
-{
-	while(!(UART2->SR & UART_FLAG_TXE));
-    UART2->DR = ch;
-
-    return ch;
-}
-
-int uart2_read(void)
-{
-    return UART2->DR;
-}
 
 void uart2_CallbackRegister(uart_callback_t callback)
 {
@@ -57,11 +32,11 @@ void USART2_IRQHandler(void)
 
 	if(received_data || overrun_occurred)
 	{
-        uint8_t received_data = uart2_read();
+        //uint8_t received_data = uart2_read();
         // Call registered callback if exists
         if(uart2_rx_callback != NULL)
         {
-            uart2_rx_callback(received_data);
+            //uart2_rx_callback(received_data);
         }
 	}
 }
@@ -154,11 +129,34 @@ void UART_DeInit(UART_RegDef_t *pUSARTx);
 /*
  * Data Send and Receive
  */
-void UART_write_byte(UART_RegDef_t *pUARTx, uint8_t data);
-uint8_t UART_read_byte(UART_RegDef_t *pUARTx);
+void UART_write_byte(UART_RegDef_t *pUARTx, uint8_t data)
+{
+    pUARTx->DR = data;
+}
 
-void UART_Write(UART_RegDef_t *pUARTx, uint8_t *pTxBuffer, uint32_t Len);
-void UART_Read(UART_RegDef_t *pUARTx, uint8_t *pRxBuffer, uint32_t Len);
+uint8_t UART_read_byte(UART_RegDef_t *pUARTx)
+{
+    return (uint8_t)(pUARTx->DR & 0xFF);
+}
+
+void UART_Write(UART_RegDef_t *pUARTx, uint8_t *pTxBuffer, uint32_t Len)
+{
+    for(uint32_t i = 0; i < Len; i++)
+    {
+        while(!UART_GetFlagStatus(pUARTx, UART_FLAG_TXE));
+        UART_write_byte(pUARTx, pTxBuffer[i]);
+    }
+    while(!UART_GetFlagStatus(pUARTx, UART_FLAG_TC));
+}
+
+void UART_Read(UART_RegDef_t *pUARTx, uint8_t *pRxBuffer, uint32_t Len)
+{
+    for(uint32_t i = 0; i < Len; i++)
+    {
+        while(!UART_GetFlagStatus(pUARTx, UART_FLAG_TXE));
+        pRxBuffer[i] = UART_read_byte(pUARTx);
+    }
+}
 
 
 /*
@@ -184,5 +182,16 @@ void UART_PeripheralControl(UART_RegDef_t *pUARTx, uint8_t EnorDi)
     }
 }
 
-uint8_t UART_GetFlagStatus(UART_RegDef_t *pUARTx , uint8_t FlagName);
-void UART_ClearFlag(UART_RegDef_t *pUARTx, uint16_t StatusFlagName);
+uint8_t UART_GetFlagStatus(UART_RegDef_t *pUARTx , uint8_t FlagName)
+{
+    if(pUARTx->SR & FlagName)
+    {
+    	return FLAG_SET;
+    }
+   return FLAG_RESET;
+}
+
+void UART_ClearFlag(UART_RegDef_t *pUARTx, uint16_t StatusFlagName)
+{
+    // TODO: implement
+}

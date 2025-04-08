@@ -99,7 +99,7 @@ typedef struct
  */
 
 
-#define UART_FLAG_CTS	                (UART_SR_TXE_CTS)
+#define UART_FLAG_CTS	                (UART_SR_TXE_CTS_MASK)
 #define UART_FLAG_TXE	                (UART_SR_TXE_MASK)
 #define UART_FLAG_TC                 	(UART_SR_TC_MASK)
 #define UART_FLAG_RXNE              	(UART_SR_RXNE_MASK)
