@@ -141,7 +141,6 @@ void UART_Read(UART_RegDef_t *pUARTx, uint8_t *pRxBuffer, uint32_t Len);
 
 void UART_InterruptConfig(uint8_t interrupt, uint8_t EnorDi);
 void UART_CallbackRegister(UART_RegDef_t *pUARTx, uart_callback_t rx_callback, uart_callback_t tx_callback);
-void uart2_CallbackRegister(uart_callback_t callback);
 
 
 /*
@@ -153,7 +152,6 @@ void UART_ClearFlag(UART_RegDef_t *pUARTx, uint16_t StatusFlagName);
 
 
 // REFACT
-void uart2_init(void);
 void uart2_interrupt_enable(void);
 
 int uart2_write(int ch);

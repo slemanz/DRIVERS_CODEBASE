@@ -19,12 +19,6 @@ void uart2_interrupt_enable(void)
     UART2->CR1 |=  (1 << 0);
 }
 
-
-void uart2_CallbackRegister(uart_callback_t callback)
-{
-    uart2_rx_callback = callback;
-}
-
 void USART2_IRQHandler(void)
 {
     const bool overrun_occurred = (UART2->SR & (1 << 3));
@@ -164,8 +158,15 @@ void UART_Read(UART_RegDef_t *pUARTx, uint8_t *pRxBuffer, uint32_t Len)
  */
 
 void UART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
-void UART_CallbackRegister(UART_RegDef_t *pUARTx, uart_callback_t rx_callback, uart_callback_t tx_callback);
-void uart2_CallbackRegister(uart_callback_t callback);
+
+void UART_CallbackRegister(UART_RegDef_t *pUARTx, uart_callback_t rx_callback, uart_callback_t tx_callback)
+{
+    if(pUARTx == UART2)
+    {
+        uart2_rx_callback = rx_callback;
+        uart2_tx_callback = tx_callback;
+    }
+}
 
 
 /*
