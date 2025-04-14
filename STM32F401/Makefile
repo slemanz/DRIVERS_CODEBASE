@@ -15,6 +15,7 @@ OBJCOPY=arm-none-eabi-objcopy
 
 INCLUDES+= -I App/Inc/
 INCLUDES+= -I Drivers/Inc/ 
+INCLUDES+= -I Common/Inc/ 
 
 
 ############################################
