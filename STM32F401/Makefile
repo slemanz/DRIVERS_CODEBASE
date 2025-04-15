@@ -32,6 +32,10 @@ OBJS		+= App/Build/driver_gpio.o
 OBJS		+= App/Build/driver_uart.o
 #OBJS		+= App/Build/system.o
 
+COMMS		+= App/Build/serial.o
+
+UTILS		+= App/Build/ring-buffer.o
+
 OBJS		+= App/Build/config.o
 
 
@@ -52,7 +56,13 @@ App/Build/%.o: Linkers/%.c
 App/Build/%.o: Drivers/Src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o App/Build/$(*).o Drivers/Src/$(*).c
 
-App/Build/$(TARGET).elf: $(OBJS)
+App/Build/%.o: Common/Src/utils/%.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o App/Build/$(*).o Common/Src/utils/$(*).c
+
+App/Build/%.o: Common/Src/comms/%.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o App/Build/$(*).o Common/Src/comms/$(*).c
+
+App/Build/$(TARGET).elf: $(OBJS) $(COMMS) $(UTILS)
 	$(CC) $(LDFLAGS) -o $@ $^
 	$(OBJCOPY) -O binary App/Build/$(TARGET).elf App/Build/$(TARGET).bin
 	arm-none-eabi-size App/Build/$(TARGET).elf

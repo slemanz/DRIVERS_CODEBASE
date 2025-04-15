@@ -4,12 +4,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void serial_init(void);
+typedef void (*serial_send_byte_fn)(uint8_t byte);
+
+void serial_init(serial_send_byte_fn send);
 
 bool serial_available(void);
 bool serial_buffer_write(uint8_t data);
 
-void serial_send_byte(uint8_t *data, uint32_t Len);
+void serial_send_byte(uint8_t data);
 uint8_t serial_rcv_byte(void);
 
 void serial_send(uint8_t *data, uint32_t Len);

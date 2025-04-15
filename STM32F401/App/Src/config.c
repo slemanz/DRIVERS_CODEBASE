@@ -1,5 +1,6 @@
 #include "config.h"
 #include "stm32f401xx.h"
+#include "comms/serial.h"
 
 static const GPIO_Config_t gpioConfigs[] = {
     {GPIOB, GPIO_PIN_NO_2, GPIO_MODE_OUT,   GPIO_SPEED_LOW,     GPIO_OP_TYPE_PP, GPIO_NO_PUPD, GPIO_NO_ALTFN},
@@ -38,6 +39,18 @@ void config_drivers(void)
     config_gpio();
     config_uart();
     systick_init(1000, clock_getValue());
+}
+
+// comms init
+static void serial_send_byte_wrapper(uint8_t data)
+{
+    UART_Write(UART2, &data, 1);
+}
+
+void config_comms(void)
+{
+    serial_init(serial_send_byte_wrapper);
+
 }
 
 
