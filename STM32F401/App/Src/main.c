@@ -3,13 +3,8 @@
 #include "comms/serial.h"
 
 #include "driver_gpio.h"
+#include "driver_systick.h"
 
-uint64_t ticks = 0;
-
-uint64_t ticks_get()
-{
-    return ticks;
-}
 
 
 int main(void)
@@ -19,8 +14,8 @@ int main(void)
     uint8_t data_send[] = "\nINIT\n\r";
     serial_send(data_send, 7);
 
-    uint64_t start_time = ticks_get();
-    uint64_t start_time2 = ticks_get();
+    uint64_t start_time = systick_get();
+    uint64_t start_time2 = systick_get();
 
 
     GPIO_WriteToOutputPin(GPIOB, GPIO_PIN_NO_2, GPIO_PIN_RESET);
@@ -28,22 +23,17 @@ int main(void)
 
     while (1)
     {
-        if((ticks_get() - start_time) >= 500)
+        if((systick_get() - start_time) >= 500)
         {
             GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_NO_5);
             GPIO_ToggleOutputPin(GPIOB, GPIO_PIN_NO_2);
-            start_time = ticks_get();
+            start_time = systick_get();
         }
 
-        if((ticks_get() - start_time2) >= 10000)
+        if((systick_get() - start_time2) >= 10000)
         {
             serial_send_byte('a');
-            start_time2 = ticks_get();
+            start_time2 = systick_get();
         }
     }
-}
-
-void SysTick_Handler(void)
-{
-    ticks++;
 }

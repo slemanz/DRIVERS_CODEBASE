@@ -27,3 +27,16 @@ void systick_interrupt_enable(void)
     // enable systick interrupt
     SYSTICK->CTRL |= CTRL_TICKINT;
 }
+
+
+static uint64_t ticks = 0;
+
+uint64_t systick_get()
+{
+    return ticks;
+}
+
+void SysTick_Handler(void)
+{
+    ticks++;
+}

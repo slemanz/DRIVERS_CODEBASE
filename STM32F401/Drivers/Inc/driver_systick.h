@@ -12,5 +12,6 @@ void systick_init(uint32_t freq, uint32_t cpu_freq);
 void systick_set_frequency(uint32_t freq, uint32_t cpu_freq);
 void systick_counter_enable(void);
 void systick_interrupt_enable(void);
+uint64_t systick_get();
 
 #endif
