@@ -1,6 +1,5 @@
 #include "config.h"
 #include "common-defines.h" 
-#include <stdio.h>
 #include "comms/serial.h"
 
 #include "driver_gpio.h"
@@ -17,7 +16,8 @@ int main(void)
 {
     config_drivers();
     config_comms();
-    printf("\n\rInit\n\r");
+    uint8_t data_send[] = "\nINIT\n\r";
+    serial_send(data_send, 7);
 
     uint64_t start_time = ticks_get();
     uint64_t start_time2 = ticks_get();
@@ -35,7 +35,7 @@ int main(void)
             start_time = ticks_get();
         }
 
-        if((ticks_get() - start_time2) >= 1000)
+        if((ticks_get() - start_time2) >= 10000)
         {
             serial_send_byte('a');
             start_time2 = ticks_get();

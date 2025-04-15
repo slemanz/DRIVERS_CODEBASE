@@ -7,7 +7,7 @@ LINKER_SCRIPT=Linkers/STM32F401xC.ld
 #DEFINES+= -DNDEBUG
 
 CFLAGS= -c -mcpu=$(MACH) -mthumb -mfloat-abi=$(FLOAT) -std=gnu11 -Wall -O0 -ggdb $(DEFINES)
-LDFLAGS =  -mcpu=$(MACH) -mthumb -mfloat-abi=$(FLOAT) --specs=nano.specs -T $(LINKER_SCRIPT) -Wl,-Map=App/Build/$(TARGET).map -ggdb -u _printf_float
+LDFLAGS =  -mcpu=$(MACH) -mthumb -mfloat-abi=$(FLOAT) --specs=nano.specs -T $(LINKER_SCRIPT) -Wl,-Map=App/Build/$(TARGET).map -ggdb -u _printf_float -Wl,--print-memory-usage
 OBJCOPY=arm-none-eabi-objcopy
 
 ###########################################
@@ -30,7 +30,6 @@ OBJS		+= App/Build/driver_systick.o
 OBJS		+= App/Build/driver_interrupt.o
 OBJS		+= App/Build/driver_gpio.o
 OBJS		+= App/Build/driver_uart.o
-#OBJS		+= App/Build/system.o
 
 COMMS		+= App/Build/serial.o
 
