@@ -2,7 +2,7 @@ TARGET=flash
 CC=arm-none-eabi-gcc
 MACH=cortex-m4
 FLOAT=soft
-LINKER_SCRIPT=Linkers/R4AM.ld
+LINKER_SCRIPT=Linkers/RA4M.ld
 
 #DEFINES+= -DNDEBUG
 
@@ -54,14 +54,14 @@ App/Build/$(TARGET).elf: $(OBJS) $(COMMS) $(UTILS)
 	arm-none-eabi-size App/Build/$(TARGET).elf
 
 load:
-	openocd -f interface/cmsis-dap.cfg -c init -c "reset init" \
+	openocd -f interface/jlink.cfg -c "transport select swd" -f target/stm32f4x.cfg -c init -c "reset init" \
 	-c "flash write_image erase App/Build/$(TARGET).elf" -c "reset run" -c shutdown
 
 debug:
-	openocd -f interface/cmsis-dap.cfg -c init -c "reset init"
+	openocd -f interface/jlink.cfg -c "transport select swd" -c init -c "reset init"
 
 reset:
-	openocd -f interface/cmsis-dap.cfg -c init -c "reset run" -c shutdown
+	openocd -f interface/jlink.cfg -c "transport select swd" -c init -c "reset run" -c shutdown
 
 clean:
 	rm -rf *.o *.map App/Build/*.o
