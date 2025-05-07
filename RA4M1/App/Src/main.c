@@ -17,10 +17,11 @@ void delay_cycles(uint32_t cycles)
 int main(void)
  {
     MMIO32(GPIO_P0_BASEADDR) |= (1 << 11); // set as output
+    MMIO32(GPIO_P0_BASEADDR) |= (1 << 27); // toggle
 
     while (1)
     {   
-        MMIO32(GPIO_P0_BASEADDR) ^= (1 << 27); // toggle
+        //MMIO32(GPIO_P0_BASEADDR) ^= (1 << 27); // toggle
         delay_cycles(5000000);
     }
 }

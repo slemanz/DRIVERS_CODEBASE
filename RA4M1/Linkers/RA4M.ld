@@ -3,7 +3,7 @@ ENTRY(Reset_Handler)
 
 MEMORY
 {
-    FLASH(rx) : ORIGIN = 0x00004000, LENGTH = 256k
+    FLASH(rx) : ORIGIN = 0x00000000, LENGTH = 256k
     SRAM(rwx)  : ORIGIN = 0x20000000, LENGTH = 16k
     DFLASH(r)  : ORIGIN = 0x40100000, LENGTH = 8k
 }

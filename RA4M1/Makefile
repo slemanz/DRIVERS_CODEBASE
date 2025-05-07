@@ -51,17 +51,15 @@ App/Build/%.o: Common/Src/comms/%.c
 App/Build/$(TARGET).elf: $(OBJS) $(COMMS) $(UTILS)
 	$(CC) $(LDFLAGS) -o $@ $^
 	$(OBJCOPY) -O binary App/Build/$(TARGET).elf App/Build/$(TARGET).bin
+	$(OBJCOPY) -O binary App/Build/$(TARGET).elf ~/opt/SEGGER/$(TARGET).bin
 	arm-none-eabi-size App/Build/$(TARGET).elf
 
 load:
-	openocd -f interface/jlink.cfg -c "transport select swd" -f target/stm32f4x.cfg -c init -c "reset init" \
+	openocd -f interface/jlink.cfg -f ~/_git/DRIVER_CODEBASE/RA4M1/Linkers/RA4M1.cfg -c init -c "reset init"  \
 	-c "flash write_image erase App/Build/$(TARGET).elf" -c "reset run" -c shutdown
 
-debug:
-	openocd -f interface/jlink.cfg -c "transport select swd" -c init -c "reset init"
-
 reset:
-	openocd -f interface/jlink.cfg -c "transport select swd" -c init -c "reset run" -c shutdown
+	openocd -f interface/jlink.cfg -c "transport select swd" -f ~/_git/DRIVER_CODEBASE/RA4M1/Linkers/RA4M1.cfg -c init -c "reset run" -c shutdown
 
 clean:
 	rm -rf *.o *.map App/Build/*.o
