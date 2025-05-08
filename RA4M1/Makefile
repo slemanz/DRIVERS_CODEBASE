@@ -55,11 +55,7 @@ App/Build/$(TARGET).elf: $(OBJS) $(COMMS) $(UTILS)
 	arm-none-eabi-size App/Build/$(TARGET).elf
 
 load:
-	openocd -f interface/jlink.cfg -f ~/_git/DRIVER_CODEBASE/RA4M1/Linkers/RA4M1.cfg -c init -c "reset init"  \
-	-c "flash write_image erase App/Build/$(TARGET).elf" -c "reset run" -c shutdown
-
-reset:
-	openocd -f interface/jlink.cfg -c "transport select swd" -f ~/_git/DRIVER_CODEBASE/RA4M1/Linkers/RA4M1.cfg -c init -c "reset run" -c shutdown
+	openocd -f interface/jlink.cfg -c "transport select jtag" -c "adapter speed 1000" -c init -c "program App/Build/$(TARGET).elf verify reset exit"
 
 clean:
 	rm -rf *.o *.map App/Build/*.o
