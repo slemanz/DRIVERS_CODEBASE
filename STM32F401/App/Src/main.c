@@ -23,7 +23,7 @@ int main(void)
 
     while (1)
     {
-        if((systick_get() - start_time) >= 500)
+        if((systick_get() - start_time) >= 1000)
         {
             GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_NO_5);
             GPIO_ToggleOutputPin(GPIOB, GPIO_PIN_NO_2);
