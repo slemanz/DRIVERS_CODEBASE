@@ -3,4 +3,6 @@
 
 #include "stm32g0.h"
 
-#endif /* INIT_APP_H_ */
+void config_drivers(void);
+
+#endif /* CONFIG_H_ */
