@@ -11,6 +11,8 @@ int main(void)
 
     while(1)
     {
+        GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_NO_5);
+        for(uint32_t i = 0; i < 4000000; i++);
     }
 }
 

@@ -61,12 +61,5 @@ App/Build/$(TARGET).elf: $(OBJS) $(COMMS) $(UTILS)
 	$(OBJCOPY) -O binary App/Build/$(TARGET).elf App/Build/$(TARGET).bin
 	arm-none-eabi-size App/Build/$(TARGET).elf
 
-load:
-	openocd -f interface/stlink-dap.cfg -c "transport select dapdirect_swd" -f target/stm32g0x.cfg -c "program App/Build/$(TARGET).elf verify reset exit"
-#openocd -f interface/stlink.cfg -f target/stm32g0x.cfg -c "program App/Build/$(TARGET).elf verify reset exit"
-
-reset:
-	openocd -f interface/stlink.cfg -f target/stm32g0x.cfg -c init -c "reset run" -c shutdown
-
 clean:
 	rm -rf *.o *.map App/Build/*.o
