@@ -2,15 +2,6 @@
  * ==========================================================================================
  *      File:   driver_gpio.h
  *      Author: William Sleman
- *
- *      Description:
- *      This header file defines structures and function prototypes for configuring and managing
- *      General Purpose Input/Output (GPIO) pins. It provides options for pin configuration, 
- *      modes, speeds, and various operations such as reading and writing pin states.
- *
- *      Note:
- *      For function definitions and detailed driver behavior, see the implementation file:
- *      driver_gpio.c.
  * ==========================================================================================
  */
 #ifndef INC_DRIVER_GPIO_H_
@@ -18,72 +9,16 @@
 
 #include "stm32g0.h"
 
-/*
- ********************************************************************************************
- * @struct          - GPIO_PinConfig_t
- *
- * @brief           - Configuration structure for a GPIO pin, 
- *                    holding settings such as pin number, mode, speed, 
- *                    pull-up/pull-down configuration, output type, 
- *                    and alternate function mode.
- *
- * @field           - GPIO_PinNumber: Specifies the number of the GPIO pin, 
- *                    defined by possible values from @GPIO_PIN_NUMBER.
- *
- * @field           - GPIO_PinMode: Specifies the mode of operation for the GPIO pin,
- *                    defined by possible values from @GPIO_PIN_MODES.
- *
- * @field           - GPIO_PinSpeed: Specifies the speed of the GPIO pin, 
- *                    defined by possible values from @GPIO_PIN_SPEED.
- *
- * @field           - GPIO_PinPuPdControl: Specifies the pull-up/pull-down 
- *                    configuration for the GPIO pin, defined by possible 
- *                    values from @GPIO_PIN_PUPD.
- *
- * @field           - GPIO_PinOPType: Specifies the output type of the GPIO pin, 
- *                    defined by possible values from @GPIO_PIN_OP_TYPE.
- *
- * @field           - GPIO_PinAltFunMode: Specifies the alternate function mode 
- *                    for the GPIO pin, defined by possible values from 
- *                    @GPIO_PIN_ALT_FUN_MODE.
- *
- * @Note            - none
- ********************************************************************************************
- */
 typedef struct
 {
+	GPIO_RegDef_t *pGPIOx;           /* hold the base address of the GPIO port which the pin belongs */
 	uint8_t GPIO_PinNumber; 	/*!< possible modes from @GPIO_PIN_NUMBER >*/
 	uint8_t GPIO_PinMode;		/*!< possible modes from @GPIO_PIN_MODES >*/
 	uint8_t	GPIO_PinSpeed; 		/*!< possible modes from @GPIO_PIN_SPEED >*/
 	uint8_t GPIO_PinPuPdControl;/*!< possible modes from @GPIO_PIN_PUPD >*/
 	uint8_t GPIO_PinOPType;		/*!< possible modes from @GPIO_PIN_OP_TYPE >*/
 	uint8_t GPIO_PinAltFunMode;	/*!< possible modes from @GPIO_PIN_ >*/
-}GPIO_PinConfig_t;
-
-
-/*
- ********************************************************************************************
- * @struct          - GPIO_Handle_t
- *
- * @brief           - Handle structure for a GPIO pin, 
- *                    containing the base address of the GPIO port and 
- *                    the configuration settings for the GPIO pin.
- *
- * @field           - pGPIOx: Holds the base address of the GPIO port 
- *                    to which the pin belongs, of type GPIO_RegDef_t.
- *
- * @field           - GPIO_PinConfig: Holds the configuration settings 
- *                    for the GPIO pin, defined by the GPIO_PinConfig_t structure.
- *
- * @Note            - none
- ********************************************************************************************
- */
-typedef struct
-{
-	GPIO_RegDef_t *pGPIOx; /* hold the base address of the GPIO port which the pin belongs */
-	GPIO_PinConfig_t GPIO_PinConfig; /* this holds GPIO pin configuration settings */
-}GPIO_Handle_t;
-
+}GPIO_Config_t;
 
 /*
  * @GPIO_PIN_NUMBER
@@ -156,6 +91,7 @@ typedef struct
  * GPIO alternate functions
  */
 
+#define GPIO_PIN_NO_ALTFN           0
 #define GPIO_PIN_ALTFN_0            0
 #define GPIO_PIN_ALTFN_1            1
 #define GPIO_PIN_ALTFN_2            2
@@ -195,7 +131,7 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi);
  * Init and De-init
  */
 
-void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
+void GPIO_Init(GPIO_Config_t *pGPIOConfig);
 void GPIO_DeInit(GPIO_RegDef_t *pGPIOx);
 
 
