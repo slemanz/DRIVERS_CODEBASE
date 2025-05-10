@@ -2,7 +2,7 @@ TARGET=flash
 CC=arm-none-eabi-gcc
 MACH=cortex-m4
 FLOAT=soft
-LINKER_SCRIPT=Linkers/STM32F401xC.ld
+LINKER_SCRIPT=Linkers/STM32G0B1.ld
 
 #DEFINES+= -DNDEBUG
 
@@ -15,7 +15,6 @@ OBJCOPY=arm-none-eabi-objcopy
 
 INCLUDES+= -I App/Inc/
 INCLUDES+= -I Drivers/Inc/ 
-INCLUDES+= -I Common/Inc/ 
 
 
 ############################################
@@ -24,18 +23,14 @@ INCLUDES+= -I Common/Inc/
 OBJS		+= App/Build/main.o
 OBJS		+= App/Build/syscalls.o
 OBJS		+= App/Build/startup.o
-
-OBJS		+= App/Build/driver_clock.o
-OBJS		+= App/Build/driver_systick.o
-OBJS		+= App/Build/driver_interrupt.o
-OBJS		+= App/Build/driver_gpio.o
-OBJS		+= App/Build/driver_uart.o
-
-COMMS		+= App/Build/serial.o
-
-UTILS		+= App/Build/ring-buffer.o
-
 OBJS		+= App/Build/config.o
+
+#OBJS		+= App/Build/driver_clock.o
+#OBJS		+= App/Build/driver_systick.o
+#OBJS		+= App/Build/driver_interrupt.o
+OBJS		+= App/Build/driver_gpio.o
+#OBJS		+= App/Build/driver_uart.o
+
 
 
 all: App/Build App/Build/$(TARGET).elf 
@@ -67,7 +62,8 @@ App/Build/$(TARGET).elf: $(OBJS) $(COMMS) $(UTILS)
 	arm-none-eabi-size App/Build/$(TARGET).elf
 
 load:
-	openocd -f interface/stlink.cfg -f target/stm32g0x.cfg -c "program App/Build/$(TARGET).elf verify reset exit"
+	openocd -f interface/stlink-dap.cfg -c "transport select dapdirect_swd" -f target/stm32g0x.cfg -c "program App/Build/$(TARGET).elf verify reset exit"
+#openocd -f interface/stlink.cfg -f target/stm32g0x.cfg -c "program App/Build/$(TARGET).elf verify reset exit"
 
 reset:
 	openocd -f interface/stlink.cfg -f target/stm32g0x.cfg -c init -c "reset run" -c shutdown
