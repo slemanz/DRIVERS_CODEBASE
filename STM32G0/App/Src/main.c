@@ -8,11 +8,16 @@ int main(void)
     config_drivers();
     GPIO_WriteToOutputPin(GPIOA, GPIO_PIN_NO_5, GPIO_PIN_SET);
 
+    uint64_t start_time = ticks_get();
+
     while(1)
     {
         //blinky
-        GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_NO_5);
-        for(uint32_t i = 0; i < 500000; i++);
+        if((ticks_get() - start_time) >= 500)
+        {
+            GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_NO_5);
+            start_time = ticks_get();
+        }
     }
 }
 

@@ -22,6 +22,7 @@ void config_drivers(void)
     //while(clock_init());
 
     config_gpio();
+    systick_init(1000, 16000000);
+
     //config_uart();
-    //systick_init(1000, clock_getValue());
 }
