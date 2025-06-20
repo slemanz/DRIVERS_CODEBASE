@@ -364,7 +364,7 @@ typedef struct
  *     Drivers Includes
  */
 
-//#include "driver_systick.h"
+#include "driver_systick.h"
 #include "driver_gpio.h"
 
 #endif
