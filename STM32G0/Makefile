@@ -1,6 +1,6 @@
 TARGET=flash
 CC=arm-none-eabi-gcc
-MACH=cortex-m4
+MACH=cortex-m0plus
 FLOAT=soft
 LINKER_SCRIPT=Linkers/STM32G0B1.ld
 
@@ -60,6 +60,10 @@ App/Build/$(TARGET).elf: $(OBJS) $(COMMS) $(UTILS)
 	$(CC) $(LDFLAGS) -o $@ $^
 	$(OBJCOPY) -O binary App/Build/$(TARGET).elf App/Build/$(TARGET).bin
 	arm-none-eabi-size App/Build/$(TARGET).elf
+
+load:
+	openocd -f interface/stlink-dap.cfg -f target/stm32g0x.cfg -c init -c "reset init" \
+	-c "flash write_image erase App/Build/$(TARGET).elf" -c "reset run" -c shutdown
 
 clean:
 	rm -rf *.o *.map App/Build/*.o
